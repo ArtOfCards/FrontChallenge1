@@ -14,7 +14,6 @@ const TodoList = ({
 }) => {
   return (
     <div className="flex flex-col mt-7 rounded-lg overflow-hidden shadow-2xl">
-      {console.log(listOfLists[0].todos)}
       {listOfLists[0].todos.map((todo) => (
         <Todo
           key={todo.id}

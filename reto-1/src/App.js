@@ -71,7 +71,7 @@ function App() {
   };
 
   /* ---------- nueva funcion de add todo list ---------- */
-
+  
   const addTodoList = (title) => {
     const lastId =
       listOfLists[0].todos.length > 0
@@ -83,19 +83,17 @@ function App() {
       title,
       completed: false,
     };
-    console.log(newTodoList);
-    const todoList = listOfLists[0].todos;
-    todoList.push(newTodoList);
-    setListOfLists(todoList);
-    console.log(listOfLists);
+    const updateListOfLists = [...listOfLists]
+    updateListOfLists[0].todos.push(newTodoList);
+    setListOfLists(updateListOfLists);
   };
 
   /*-------------------------------------------------------*/
 
   const handleSetComplete = (id) => {
-    const updatedList = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, completed: !todo.completed };
+    const updatedList = listOfLists[0].todos.map((todo) => {
+      if (listOfLists[0].todos.id === id) {
+        return { ...listOfLists[0].todos, completed: !listOfLists[0].todos.completed };
       }
       return todo;
     });
