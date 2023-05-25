@@ -1,12 +1,12 @@
 import { useState } from "react"
 
-const TodoInput = ({ addTodo }) => {
+const TodoInput = ({ addTodoList }) => {
 
     const [title, setTitle] = useState('');
 
     const handleAddTodo = (e) => {
         if (e.key.toLowerCase() === 'enter') {
-            addTodo(title);
+            addTodoList(title);
             setTitle('');
         }
     }
