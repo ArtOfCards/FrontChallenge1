@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Title, TodoInput, TodoList } from "./components";
+import { Title, TodoFilters, TodoInput, TodoList } from "./components";
 
 function App() {
   const [todos, setTodos] = useState([
@@ -33,7 +33,29 @@ function App() {
         {
           id: 1,
           title: "Todo 1",
+          completed: true,
+        },
+
+        {
+          id: 2,
+          title: "Todo 2",
           completed: false,
+        },
+
+        {
+          id: 3,
+          title: "Todo 3",
+          completed: false,
+        },
+      ],
+
+      id: 2,
+      title: "lista 1",
+      todos: [
+        {
+          id: 1,
+          title: "Todo 1",
+          completed: true,
         },
 
         {
@@ -53,33 +75,45 @@ function App() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const [filteredTodos, setFilteredTodos] = useState(todos);
+  const [filteredTodos, setFilteredTodos] = useState(listOfLists[0].todos);
 
-  const addTodo = (title) => {
-    const lastId = todos.length > 0 ? todos[todos.length - 1].id : 1;
 
-    const newTodo = {
+  const generateRandomId = (length) => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let randomId = "";
+    for (let i = 0; i < length; i++) {
+      randomId += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return randomId;
+  };
+
+  const addTodoList = (title) => {
+    const lastId = listOfLists.length > 0 ? listOfLists[listOfLists.length - 1].id : 1;
+
+    const newlist = {
       id: lastId + 1,
       title,
-      completed: false,
+      todos:[
+        {
+          id: 1,
+          title: "agregue aquí sus todos",
+          completed: true,
+        },
+      ],
     };
 
-    const todoList = [...todos];
-    todoList.push(newTodo);
-
-    setTodos(todoList);
+    const updateListOfLists = [...listOfLists]
+    updateListOfLists.push(newlist);
+    setListOfLists(updateListOfLists);
+    console.log(listOfLists);
   };
 
   /* ---------- nueva funcion de add todo list ---------- */
   
-  const addTodoList = (title) => {
-    const lastId =
-      listOfLists[0].todos.length > 0
-        ? listOfLists[0].todos[listOfLists[0].todos.length - 1].id
-        : 1;
+  const addTodo = (title) => {
       
     const newTodoList = {
-      id: lastId + 1,
+      id: generateRandomId(24),
       title,
       completed: false,
     };
@@ -91,25 +125,42 @@ function App() {
   /*-------------------------------------------------------*/
 
   const handleSetComplete = (id) => {
-    const updatedList = listOfLists[0].todos.map((todo) => {
-      if (listOfLists[0].todos.id === id) {
-        return { ...listOfLists[0].todos, completed: !listOfLists[0].todos.completed };
+    const updatedList = listOfLists.map(list => {
+      if (list.todos.some(todo => todo.id === id)) {
+        const updatedTodos = list.todos.map(todo => {
+          if (todo.id === id) {
+            return { ...todo, completed: !todo.completed }
+          }
+          return todo;
+        });
+        return { ...list, todos: updatedTodos };
       }
-      return todo;
+      return list;
     });
-
-    setTodos(updatedList);
-  };
-
+  
+    setListOfLists(updatedList);
+    console.log(updatedList);
+  }
+  
   const handleClearComplete = () => {
-    const updatedList = todos.filter((todo) => !todo.completed);
-    setTodos(updatedList);
+    const updatedLists = listOfLists.map(list => {
+      const updatedTodos = list.todos.filter(todo => !todo.completed);
+      return { ...list, todos: updatedTodos };
+    });
+  
+    setListOfLists(updatedLists);
+  };
+  
+  const handleDelete = (id) => {
+    const updatedLists = listOfLists.map(list => {
+      const updatedTodos = list.todos.filter(todo => todo.id !== id);
+      return { ...list, todos: updatedTodos };
+    });
+  
+    setListOfLists(updatedLists);
   };
 
-  const handleDelete = (id) => {
-    const updatedList = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedList);
-  };
+
 
   const showAllTodos = () => {
     setActiveFilter("all");
@@ -142,6 +193,10 @@ function App() {
       </div>
       <div className="container flex flex-col max-w-2xl">
         <TodoInput addTodoList={addTodoList} />
+        <h3>List 1</h3>
+
+        <TodoInput addTodoList={addTodo} />
+
         <TodoList
           activeFilter={activeFilter}
           listOfLists={listOfLists}
@@ -151,7 +206,7 @@ function App() {
           handleSetComplete={handleSetComplete}
           handleDelete={handleDelete}
           handleClearComplete={handleClearComplete}
-        />
+        /> 
       </div>
     </div>
   );
