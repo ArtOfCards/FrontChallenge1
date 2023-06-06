@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const Todo = ({ todo, handleSetComplete, handleDelete }) => {
 
-    const { id, title, completed } = todo;
+    const { id, title, completed, createdAt } = todo;
 
     return (
         <div
@@ -22,9 +22,12 @@ const Todo = ({ todo, handleSetComplete, handleDelete }) => {
                             </span>
                         )
                 }
-
-                <p className={"pl-3 " + (completed && "line-through")}>{title}</p>
+                <div className=" grid   grid-rows-2">
+                <p className={"pl-3 " + (completed && "line-through")}>{title} </p>
+                <p className={"pl-3  text-xs " }>{createdAt} </p>
+                </div>
             </div>
+
 
             <img onClick={() => handleDelete(id)} className="h-5 w-5 cursor-pointer transition-all duration-300 ease-in" src="/close-icon.svg" alt="Close Icon" />
         </div>

@@ -5,76 +5,40 @@ import { Title, TodoFilters, TodoInput, TodoList , ListInput } from "./component
 
 function App() {
 
-    const [todos, setTodos] = useState([
+  
+  const getListOfListsFromLocalStorage = () => {
+    const storedData = localStorage.getItem('listOfLists');
+    return storedData ? JSON.parse(storedData) : [
       {
         id: 1,
-        title: 'Watch the next Marvel Movie',
-        completed: false,
+        title: "primera lista de prueba",
+        todos: [
+          {
+            id: 1,
+            title: "Todo 1",
+            completed: true,
+            createdAt: new Date().toISOString().slice(0, 16),
+          },
+          {
+            id: 2,
+            title: "Todo 2",
+            completed: false,
+            createdAt: new Date().toISOString().slice(0, 16),
+          },
+          {
+            id: 3,
+            title: "Todo 3",
+            completed: false,
+            createdAt: new Date().toISOString().slice(0, 16),
+          },
+        ],
       },
-      {
-        id: 2,
-        title: 'Record the next Video',
-       completed: false,
-      },
-      {
-        id: 3,
-        title: 'Wash the dishes',
-        completed: false,
-      },
-      {
-        id: 4,
-        title: 'Study 2 hours',
-        completed: false,
-      }
-    ])
+    ];
+  };
   
-  const [listOfLists, setListOfLists] = useState([
-    {
-      id: 1,
-      title: "primera lista de prueba",
-      todos: [
-        {
-          id: 1,
-          title: "Todo 1",
-          completed: true,
-        },
-
-        {
-          id: 2,
-          title: "Todo 2",
-          completed: false,
-        },
-
-        {
-          id: 3,
-          title: "Todo 3",
-          completed: false,
-        },
-      ],
-
-      id: 2,
-      title: "lista 2",
-      todos: [
-        {
-          id: 2134,
-          title: "Todo 1 de la lista 2",
-          completed: true,
-        },
-
-        {
-          id: 2342356,
-          title: "Todo 2 de la lista 2",
-          completed: false,
-        },
-
-        {
-          id: 30912039,
-          title: "Todo 3 de la lista 2",
-          completed: false,
-        },
-      ],
-    },
-  ]);
+  // Obtener los datos iniciales desde el localStorage 
+  const [listOfLists, setListOfLists] = useState(getListOfListsFromLocalStorage());
+  
 
   const [activeFilter, setActiveFilter] = useState("all");
 
@@ -89,42 +53,43 @@ function App() {
     }
     return randomId;
   };
+  /* ------------------------------------------------------------------------- */
 
-  const addTodoList = (idList,title) => {
-
+  const addTodoList = (idList, title) => {
     const newlist = {
       id: generateRandomId(30),
       title,
-      todos:[
+      todos: [
         {
           id: generateRandomId(24),
           title: "agregue aquí sus todos",
           completed: true,
+          createdAt: new Date().toISOString().slice(0, 16),
+
         },
       ],
     };
-
-    const updateListOfLists = [...listOfLists]
-    updateListOfLists.push(newlist);
-    setListOfLists(updateListOfLists);
-    console.log(listOfLists);
-    
+  
+    const updatedListOfLists = [...listOfLists, newlist];
+    setListOfLists(updatedListOfLists);
+    localStorage.setItem('listOfLists', JSON.stringify(updatedListOfLists));
   };
 
   /* ---------- nueva funcion de add todo list ---------- */
-  
+
   const addTodo = (listId, title) => {
     const newTodo = {
       id: generateRandomId(24),
-      title,
+      title: title.trim(),
       completed: false,
+      createdAt: new Date().toISOString().slice(0, 16),
     };
   
-    const updatedListOfLists = listOfLists.map(list => {
+    const updatedListOfLists = listOfLists.map((list) => {
       if (list.id === listId) {
         return {
           ...list,
-          todos: [...list.todos, newTodo]
+          todos: [...list.todos, newTodo],
         };
       }
       return list;
@@ -134,7 +99,7 @@ function App() {
     localStorage.setItem('listOfLists', JSON.stringify(updatedListOfLists));
   };
 
-  /*-------------------------------------------------------*/
+  /* ------------------------------------------------------- */
 
   const handleSetComplete = (id) => {
     const updatedList = listOfLists.map(list => {
@@ -151,52 +116,54 @@ function App() {
     });
   
     setListOfLists(updatedList);
-    console.log(updatedList);
-  }
+    localStorage.setItem('listOfLists', JSON.stringify(updatedList));
+  };
   
-  const handleClearComplete = () => {
+  /* ---------------------- ------------------------------------- */
+  const handleClearComplete = (listId) => {
     const updatedLists = listOfLists.map(list => {
-      const updatedTodos = list.todos.filter(todo => !todo.completed);
-      return { ...list, todos: updatedTodos };
+      if (list.id === listId) {
+        const updatedTodos = list.todos.filter(todo => !todo.completed);
+        return { ...list, todos: updatedTodos };
+      }
+      return list;
     });
   
     setListOfLists(updatedLists);
+  
+    // Actualizar el localStorage solo para la lista modificada
+    const updatedLocalStorage = listOfLists.map((list) => {
+      if (list.id === listId) {
+        return { ...list, todos: updatedLists.find(l => l.id === listId).todos };
+      }
+      return list;
+    });
+  
+    localStorage.setItem('listOfLists', JSON.stringify(updatedLocalStorage));
   };
   
+
+  /* ------------------------------- ----------------------------- */
+
   const handleDelete = (id) => {
-    const updatedLists = listOfLists.map(list => {
-      const updatedTodos = list.todos.filter(todo => todo.id !== id);
+    const updatedLists = listOfLists.map((list) => {
+      const updatedTodos = list.todos.filter((todo) => todo.id !== id);
       return { ...list, todos: updatedTodos };
     });
   
     setListOfLists(updatedLists);
+  
+    // Actualizar el localStorage eliminando la lista correspondiente
+    const updatedLocalStorage = updatedLists.filter((list) => list.id !== id);
+    localStorage.setItem('listOfLists', JSON.stringify(updatedLocalStorage));
   };
 
+/* ------------------------------ -------------------------------- */
 
 
-  const showAllTodos = () => {
-    setActiveFilter("all");
-  };
 
-  const showActiveTodos = () => {
-    setActiveFilter("active");
-  };
 
-  const showCompletedTodos = () => {
-    setActiveFilter("completed");
-  };
-
-  useEffect(() => {
-    if (activeFilter === "all") {
-      setFilteredTodos(listOfLists[0].todos);
-    } else if (activeFilter === "active") {
-      const activeTodos = listOfLists[0].todos.filter((todo) => todo.completed === false);
-      setFilteredTodos(activeTodos);
-    } else if (activeFilter === "completed") {
-      const completedTodos = listOfLists[0].todos.filter((todo) => todo.completed === true);
-      setFilteredTodos(completedTodos);
-    }
-  }, [activeFilter, todos]);
+  const storedListOfLists = JSON.parse(localStorage.getItem('listOfLists'));
 
   return (
     <div className="bg-cyan-200 min-h-screen font-inter h-full text-cyan-400 flex flex-cols flex-wrap items-center justify-center py-20 px-5 ">
@@ -208,15 +175,12 @@ function App() {
         <TodoInput addTodoList={addTodoList} />
 
         <TodoList
-          activeFilter={activeFilter}
-          listOfLists={listOfLists}
-          showAllTodos={showAllTodos}
-          showActiveTodos={showActiveTodos}
-          showCompletedTodos={showCompletedTodos}
-          handleSetComplete={handleSetComplete}
-          handleDelete={handleDelete}
-          handleClearComplete={handleClearComplete}
-          addTodo={addTodo}
+           activeFilter={activeFilter}
+           listOfLists={storedListOfLists || listOfLists} 
+           handleSetComplete={handleSetComplete}
+           handleDelete={handleDelete}
+           handleClearComplete={handleClearComplete}
+           addTodo={addTodo}
         /> 
         
       </div>
