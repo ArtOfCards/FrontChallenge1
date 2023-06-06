@@ -1,12 +1,15 @@
 import { useState } from "react"
 
-const TodoInput = ({ idList,addTodoList }) => {
+ 
+const ListInput = ({ addTodoList, id }) => {
 
     const [title, setTitle] = useState('');
 
     const handleAddTodo = (e) => {
+        console.log(addList);
+        console.log(id);
         if (e.key.toLowerCase() === 'enter') {
-            addTodoList(idList,title);
+            addTodoList(title,id);
             setTitle('');
         }
     }
@@ -24,8 +27,9 @@ const TodoInput = ({ idList,addTodoList }) => {
                 onKeyDown={(e) => handleAddTodo(e)}
                 placeholder="What's next..."
             />
+            <h1> funciono </h1>
         </div>
     )
 }
 
-export { TodoInput }
+export { ListInput }

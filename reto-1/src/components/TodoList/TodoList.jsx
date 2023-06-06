@@ -1,6 +1,7 @@
+import React from "react";
 import { Todo } from "../Todo";
-
 import { TodoFilters } from "../TodoFilters";
+import { TodoInput } from "../TodoInput";
 
 const TodoList = ({
   listOfLists,
@@ -11,27 +12,33 @@ const TodoList = ({
   showAllTodos,
   showActiveTodos,
   showCompletedTodos,
+  addTodo,
 }) => {
   return (
     <div className="flex flex-col mt-7 rounded-lg overflow-hidden shadow-2xl">
-      {listOfLists[0].todos.map((todo) => (
-        
-        <Todo
-          key={todo.id}
-          todo={todo}
-          handleSetComplete={handleSetComplete}
-          handleDelete={handleDelete}
-        />
+      {listOfLists.map((list) => (
+        <div   key={list.id}>
+          <h2 className="text-zinc-950  bg-cyan-300">{list.title}</h2>
+          <TodoInput idList = {list.id} addTodoList={addTodo} /> <br></br>
+          {list.todos.map((todo) => (
+            <Todo
+              key={todo.id}
+              todo={todo}
+              handleSetComplete={handleSetComplete}
+              handleDelete={handleDelete}
+            />
+          ))}
+        </div>
       ))}
       <TodoFilters
         activeFilter={activeFilter}
-        total={listOfLists[0].todos.length}
+        total={3}
         showAllTodos={showAllTodos}
         showActiveTodos={showActiveTodos}
         showCompletedTodos={showCompletedTodos}
         handleClearComplete={handleClearComplete}
-    />
-    </div>
+      />
+    </div> 
   );
 };
 

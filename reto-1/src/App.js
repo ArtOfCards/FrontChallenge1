@@ -1,34 +1,37 @@
 import { useEffect, useState } from "react";
 
-import { Title, TodoFilters, TodoInput, TodoList } from "./components";
+
+import { Title, TodoFilters, TodoInput, TodoList , ListInput } from "./components";
 
 function App() {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      title: "Hacerme una paja",
-      completed: false,
-    },
-    {
-      id: 2,
-      title: "Terminar el codigo",
-      completed: false,
-    },
-    {
-      id: 3,
-      title: "bueno... otra paja",
-      completed: false,
-    },
-    {
-      id: 4,
-      title: "Cancelar el semestre",
-      completed: false,
-    },
-  ]);
+
+    const [todos, setTodos] = useState([
+      {
+        id: 1,
+        title: 'Watch the next Marvel Movie',
+        completed: false,
+      },
+      {
+        id: 2,
+        title: 'Record the next Video',
+       completed: false,
+      },
+      {
+        id: 3,
+        title: 'Wash the dishes',
+        completed: false,
+      },
+      {
+        id: 4,
+        title: 'Study 2 hours',
+        completed: false,
+      }
+    ])
+  
   const [listOfLists, setListOfLists] = useState([
     {
       id: 1,
-      title: "lista 1",
+      title: "primera lista de prueba",
       todos: [
         {
           id: 1,
@@ -50,23 +53,23 @@ function App() {
       ],
 
       id: 2,
-      title: "lista 1",
+      title: "lista 2",
       todos: [
         {
-          id: 1,
-          title: "Todo 1",
+          id: 2134,
+          title: "Todo 1 de la lista 2",
           completed: true,
         },
 
         {
-          id: 2,
-          title: "Todo 2",
+          id: 2342356,
+          title: "Todo 2 de la lista 2",
           completed: false,
         },
 
         {
-          id: 3,
-          title: "Todo 3",
+          id: 30912039,
+          title: "Todo 3 de la lista 2",
           completed: false,
         },
       ],
@@ -87,15 +90,14 @@ function App() {
     return randomId;
   };
 
-  const addTodoList = (title) => {
-    const lastId = listOfLists.length > 0 ? listOfLists[listOfLists.length - 1].id : 1;
+  const addTodoList = (idList,title) => {
 
     const newlist = {
-      id: lastId + 1,
+      id: generateRandomId(30),
       title,
       todos:[
         {
-          id: 1,
+          id: generateRandomId(24),
           title: "agregue aquí sus todos",
           completed: true,
         },
@@ -106,20 +108,30 @@ function App() {
     updateListOfLists.push(newlist);
     setListOfLists(updateListOfLists);
     console.log(listOfLists);
+    
   };
 
   /* ---------- nueva funcion de add todo list ---------- */
   
-  const addTodo = (title) => {
-      
-    const newTodoList = {
+  const addTodo = (listId, title) => {
+    const newTodo = {
       id: generateRandomId(24),
       title,
       completed: false,
     };
-    const updateListOfLists = [...listOfLists]
-    updateListOfLists[0].todos.push(newTodoList);
-    setListOfLists(updateListOfLists);
+  
+    const updatedListOfLists = listOfLists.map(list => {
+      if (list.id === listId) {
+        return {
+          ...list,
+          todos: [...list.todos, newTodo]
+        };
+      }
+      return list;
+    });
+  
+    setListOfLists(updatedListOfLists);
+    localStorage.setItem('listOfLists', JSON.stringify(updatedListOfLists));
   };
 
   /*-------------------------------------------------------*/
@@ -176,12 +188,12 @@ function App() {
 
   useEffect(() => {
     if (activeFilter === "all") {
-      setFilteredTodos(todos);
+      setFilteredTodos(listOfLists[0].todos);
     } else if (activeFilter === "active") {
-      const activeTodos = todos.filter((todo) => todo.completed === false);
+      const activeTodos = listOfLists[0].todos.filter((todo) => todo.completed === false);
       setFilteredTodos(activeTodos);
     } else if (activeFilter === "completed") {
-      const completedTodos = todos.filter((todo) => todo.completed === true);
+      const completedTodos = listOfLists[0].todos.filter((todo) => todo.completed === true);
       setFilteredTodos(completedTodos);
     }
   }, [activeFilter, todos]);
@@ -192,10 +204,8 @@ function App() {
         <Title />
       </div>
       <div className="container flex flex-col max-w-2xl">
+        <h1 className=" text-cyan-50">Add List</h1 >
         <TodoInput addTodoList={addTodoList} />
-        <h3>List 1</h3>
-
-        <TodoInput addTodoList={addTodo} />
 
         <TodoList
           activeFilter={activeFilter}
@@ -206,7 +216,9 @@ function App() {
           handleSetComplete={handleSetComplete}
           handleDelete={handleDelete}
           handleClearComplete={handleClearComplete}
+          addTodo={addTodo}
         /> 
+        
       </div>
     </div>
   );
