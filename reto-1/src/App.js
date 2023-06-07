@@ -42,7 +42,6 @@ function App() {
 
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const [filteredTodos, setFilteredTodos] = useState(listOfLists[0].todos);
 
 
   const generateRandomId = (length) => {
@@ -159,7 +158,25 @@ function App() {
   };
 
 /* ------------------------------ -------------------------------- */
+  const modifyTodo = ( todoId, updatedTitle) => {
+    const updatedListOfLists = listOfLists.map((list) => {
+        const updatedTodos = list.todos.map((todo) => {
+          if (todo.id === todoId) {
+            return { ...todo, title: updatedTitle };
+          }
+          return todo;
+        });
+        return { ...list, todos: updatedTodos };
+      
+      return list;
+    });
 
+    setListOfLists(updatedListOfLists);
+    localStorage.setItem('listOfLists', JSON.stringify(updatedListOfLists));
+  };
+
+
+/* ----------------------- --------------------------------------- */
 
 
 
@@ -171,7 +188,7 @@ function App() {
         <Title />
       </div>
       <div className="container flex flex-col max-w-2xl">
-        <h1 className=" text-cyan-50">Add List</h1 >
+        <h1 className=" text-cyan-50  text-2xl font-semibold">Add List</h1 >
         <TodoInput addTodoList={addTodoList} />
 
         <TodoList
@@ -181,6 +198,8 @@ function App() {
            handleDelete={handleDelete}
            handleClearComplete={handleClearComplete}
            addTodo={addTodo}
+           modifyTodo={modifyTodo}
+
         /> 
         
       </div>

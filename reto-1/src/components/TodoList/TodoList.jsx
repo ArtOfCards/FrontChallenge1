@@ -10,6 +10,7 @@ const TodoList = ({
   handleDelete,
   handleClearComplete,
   addTodo,
+  modifyTodo,
 }) => {
   return (
     <div className="flex flex-col mt-7 rounded-lg overflow-hidden shadow-2xl">
@@ -24,6 +25,8 @@ const TodoList = ({
               handleSetComplete={handleSetComplete}
               handleDelete={handleDelete}
               createdAt={todo.createdAt}
+              modifyTodo={modifyTodo}
+
             />
           ))}
           <TodoFilters
