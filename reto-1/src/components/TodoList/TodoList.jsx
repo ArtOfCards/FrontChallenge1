@@ -16,9 +16,11 @@ const TodoList = ({
   return (
     <div className="flex flex-col mt-7 rounded-lg overflow-hidden shadow-2xl">
       {listOfLists.map((list) => (
-        <div   key={list.id}>
-          <h2 className="text-zinc-950  bg-cyan-300 text-xl font-semibold">{list.title}</h2>
-          <TodoInput idList = {list.id} addTodoList={addTodo} /> <br></br>
+        <div key={list.id}>
+          <h2 className="text-zinc-950  bg-cyan-300 text-xl font-semibold">
+            {list.title}
+          </h2>
+          <TodoInput idList={list.id} addTodoList={addTodo} /> <br></br>
           {list.todos.map((todo) => (
             <Todo
               key={todo.id}
@@ -28,20 +30,17 @@ const TodoList = ({
               createdAt={todo.createdAt}
               modifyTodo={modifyTodo}
               countdown={countdown}
-
             />
           ))}
           <TodoFilters
-        activeFilter={activeFilter}
-        total={list.todos.length}
-        handleClearComplete={handleClearComplete}
-        listId = {list.id}
-      />
+            activeFilter={activeFilter}
+            total={list.todos.length}
+            handleClearComplete={handleClearComplete}
+            listId={list.id}
+          />
         </div>
-        
       ))}
-      
-    </div> 
+    </div>
   );
 };
 

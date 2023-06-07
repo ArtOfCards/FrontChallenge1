@@ -29,56 +29,52 @@ const Todo = ({ todo, handleSetComplete, handleDelete, modifyTodo }) => {
     if (selectedDate) {
       const targetDate = new Date(selectedDate).getTime();
       countdown(targetDate);
-      setShowInput(false); // Oculta el desplegable del botón
+      setShowInput(false);
     }
   };
 
   const countdown = (targetDate) => {
-    // Calcula la diferencia entre la fecha objetivo y la fecha actual
     const difference = targetDate - new Date().getTime();
 
-    // Si la fecha objetivo ya ha pasado
     if (difference <= 0) {
       console.log("¡La cuenta regresiva ha terminado!");
-      setCountdownColor(""); // Restablece el color del fondo
+      setCountdownColor("");
       return;
     }
 
-    // Calcula los días, horas, minutos y segundos restantes
     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor(
+      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-    // Cambia el color del fondo en función del tiempo restante
     if (days <= 0 && hours <= 0 && minutes <= 0 && seconds <= 10) {
-      setCountdownColor("bg-red-200"); // Cambia el color del fondo a rojo
+      setCountdownColor("bg-red-200");
     } else {
-      setCountdownColor(""); // Restablece el color del fondo
+      setCountdownColor("");
     }
 
-    // Muestra el resultado en la consola
-    console.log(`Días: ${days}, Horas: ${hours}, Minutos: ${minutes}, Segundos: ${seconds}`);
+    console.log(
+      `Días: ${days}, Horas: ${hours}, Minutos: ${minutes}, Segundos: ${seconds}`
+    );
 
-    // Espera 1 segundo y llama a la función nuevamente
     setTimeout(() => {
       countdown(targetDate);
     }, 1000);
   };
 
   return (
-    <div className={`flex items-center justify-between p-4 bg-cyan-50 border-b border-solid border-cyan-400 ${countdownColor}`}>
+    <div
+      className={`flex items-center justify-between p-4 bg-cyan-50 border-b border-solid border-cyan-400 ${countdownColor}`}
+    >
       <div className="flex items-center">
         {completed ? (
           <div
             onClick={() => handleSetComplete(id)}
             className="bg-cyan-500 p-1 rounded-full cursor-pointer"
           >
-            <img
-              className="h-4 w-4"
-              src="/check-icon.svg"
-              alt="Check Icon"
-            />
+            <img className="h-4 w-4" src="/check-icon.svg" alt="Check Icon" />
           </div>
         ) : (
           <span
@@ -88,9 +84,7 @@ const Todo = ({ todo, handleSetComplete, handleDelete, modifyTodo }) => {
         )}
         <div className="grid grid-rows-2">
           {!showInput ? (
-            <p className={"pl-3 " + (completed && "line-through")}>
-              {title}
-            </p>
+            <p className={"pl-3 " + (completed && "line-through")}>{title}</p>
           ) : (
             <input
               type="text"
@@ -127,11 +121,7 @@ const Todo = ({ todo, handleSetComplete, handleDelete, modifyTodo }) => {
 
       {showInput && (
         <div>
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={handleDateChange}
-          />
+          <input type="date" value={selectedDate} onChange={handleDateChange} />
           <button onClick={handleCountdownClick}>Save</button>
         </div>
       )}
