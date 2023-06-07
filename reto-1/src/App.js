@@ -18,18 +18,24 @@ function App() {
             title: "Todo 1",
             completed: true,
             createdAt: new Date().toISOString().slice(0, 16),
+          countdown: "",
+
           },
           {
             id: 2,
             title: "Todo 2",
             completed: false,
             createdAt: new Date().toISOString().slice(0, 16),
+          countdown: "",
+
           },
           {
             id: 3,
             title: "Todo 3",
             completed: false,
             createdAt: new Date().toISOString().slice(0, 16),
+            countdown: "",
+
           },
         ],
       },
@@ -64,6 +70,7 @@ function App() {
           title: "agregue aquí sus todos",
           completed: true,
           createdAt: new Date().toISOString().slice(0, 16),
+          countdown: "",
 
         },
       ],
@@ -82,6 +89,8 @@ function App() {
       title: title.trim(),
       completed: false,
       createdAt: new Date().toISOString().slice(0, 16),
+      countdown: "",
+
     };
   
     const updatedListOfLists = listOfLists.map((list) => {
@@ -176,10 +185,6 @@ function App() {
   };
 
 
-/* ----------------------- --------------------------------------- */
-
-
-
   const storedListOfLists = JSON.parse(localStorage.getItem('listOfLists'));
 
   return (
@@ -199,7 +204,6 @@ function App() {
            handleClearComplete={handleClearComplete}
            addTodo={addTodo}
            modifyTodo={modifyTodo}
-
         /> 
         
       </div>

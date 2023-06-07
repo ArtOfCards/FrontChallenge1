@@ -11,6 +11,7 @@ const TodoList = ({
   handleClearComplete,
   addTodo,
   modifyTodo,
+  countdown,
 }) => {
   return (
     <div className="flex flex-col mt-7 rounded-lg overflow-hidden shadow-2xl">
@@ -26,6 +27,7 @@ const TodoList = ({
               handleDelete={handleDelete}
               createdAt={todo.createdAt}
               modifyTodo={modifyTodo}
+              countdown={countdown}
 
             />
           ))}
